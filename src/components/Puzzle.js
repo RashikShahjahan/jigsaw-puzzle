@@ -70,7 +70,7 @@ const Puzzle = ({ imageSrc, numRows, numCols }) => {
         [newPieces[draggedIndex], newPieces[targetIndex]] = [newPieces[targetIndex], newPieces[draggedIndex]];
   
         // Assume each piece's id correctly maps to its solved position index
-        const isDraggedPieceCorrect = targetIndex === item.id;
+        const isDraggedPieceCorrect = targetIndex === newPieces[draggedIndex].id;
         const isTargetPieceCorrect = draggedIndex === newPieces[targetIndex].id;
   
         // Show floating message for correct placements
