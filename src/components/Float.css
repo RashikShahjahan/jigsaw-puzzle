@@ -1,0 +1,23 @@
+/* Add this to your CSS file */
+@keyframes floatAndGrow {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -10000px) scale(15);
+      }
+    }
+  
+    .floatingMessage {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-weight: bold;
+        font-size: 24px; /* Adjust if you want the text larger or smaller */
+        color: #FF0000; /* White text for good contrast */
+        animation: floatAndGrow 20s forwards;
+        z-index: 1000;
+      }
