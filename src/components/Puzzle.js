@@ -69,22 +69,32 @@ const Puzzle = ({ imageSrc, numRows, numCols }) => {
         const newPieces = [...prevPieces];
         [newPieces[draggedIndex], newPieces[targetIndex]] = [newPieces[targetIndex], newPieces[draggedIndex]];
   
-        // Assume each piece's id correctly maps to its solved position index
-        const isDraggedPieceCorrect = targetIndex === newPieces[draggedIndex].id;
-        const isTargetPieceCorrect = draggedIndex === newPieces[targetIndex].id;
+        // After swapping, calculate if the new position is correct based on numRows and numCols
+        const checkCorrectness = (pieceIndex, piece) => {
+          const expectedRow = Math.floor(piece.id / numCols);
+          const expectedCol = piece.id % numCols;
+          const actualRow = Math.floor(pieceIndex / numCols);
+          const actualCol = pieceIndex % numCols;
+          return expectedRow === actualRow && expectedCol === actualCol;
+        };
+  
+        const isDraggedPieceCorrectNow = checkCorrectness(targetIndex, newPieces[targetIndex]);
+        const isTargetPieceCorrectNow = checkCorrectness(draggedIndex, newPieces[draggedIndex]);
   
         // Show floating message for correct placements
-        if (isDraggedPieceCorrect || isTargetPieceCorrect) {
+        if (isDraggedPieceCorrectNow || isTargetPieceCorrectNow) {
           setMessage({ content: "Ador!", visible: true });
           setTimeout(() => setMessage({ content: "", visible: false }), 2000); // Hide after 2 seconds
+        } else {
+          setMessage({ content: "", visible: false }); // No message if the placement isn't correct
         }
   
-        // Update correct pieces count
+        // Update correct pieces count accurately
         setCorrectPiecesCount((prevCount) => {
           let newCount = prevCount;
-          newCount += isDraggedPieceCorrect ? 1 : (targetIndex === newPieces[draggedIndex].id ? -1 : 0);
-          newCount += isTargetPieceCorrect ? 1 : (draggedIndex === newPieces[targetIndex].id ? -1 : 0);
-          return newCount;
+          newCount += isDraggedPieceCorrectNow ? 1 : -1; // Increment or decrement based on correctness
+          newCount += isTargetPieceCorrectNow ? 1 : -1; // Adjust for the target piece as well
+          return Math.max(newCount, 0); // Ensure count does not go below 0
         });
   
         return newPieces;
